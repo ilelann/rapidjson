@@ -1,4 +1,6 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+cmake_minimum_required(VERSION 3.14.0)
+cmake_policy(SET CMP0077 NEW)
+
 if(POLICY CMP0025)
   # detect Apple's Clang
   cmake_policy(SET CMP0025 NEW)
@@ -29,9 +31,14 @@ endif()
 # Build all binaries in a separate directory
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-option(RAPIDJSON_BUILD_DOC "Build rapidjson documentation." ON)
-option(RAPIDJSON_BUILD_EXAMPLES "Build rapidjson examples." ON)
-option(RAPIDJSON_BUILD_TESTS "Build rapidjson perftests and unittests." ON)
+set(RAPIDJSON_STANDALONE_PROJECT OFF)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(RAPIDJSON_STANDALONE_PROJECT ON)
+endif ()
+
+option(RAPIDJSON_BUILD_DOC "Build rapidjson documentation." ${RAPIDJSON_STANDALONE_PROJECT})
+option(RAPIDJSON_BUILD_EXAMPLES "Build rapidjson examples." ${RAPIDJSON_STANDALONE_PROJECT})
+option(RAPIDJSON_BUILD_TESTS "Build rapidjson perftests and unittests." ${RAPIDJSON_STANDALONE_PROJECT})
 option(RAPIDJSON_BUILD_THIRDPARTY_GTEST
     "Use gtest installation in `thirdparty/gtest` by default if available" OFF)
 
